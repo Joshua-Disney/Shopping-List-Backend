@@ -6,10 +6,10 @@ module.exports = {
   generateToken
 };
 
-function generateToken(user) {
+function generateToken(profile) {
   const payload = {
-    subject: user.id,
-    username: user.username
+    subject: profile.id,
+    email: profile.email
   };
 
   const options = {

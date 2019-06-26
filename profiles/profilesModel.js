@@ -8,21 +8,21 @@ module.exports = {
 };
 
 function find() {
-  return db("users").select("username", "authLevel", "organization");
+  return db("profiles").select("email", "other_stuff", "even_more_stuff");
 }
 
 function findBy(filter) {
-  return db("users").where(filter);
+  return db("profiles").where(filter);
 }
 
-async function add(user) {
-  const [id] = await db("users").insert(user, "id");
+async function add(profile) {
+  const [id] = await db("profiles").insert(profile, "id");
 
   return findById(id);
 }
 
 function findById(id) {
-  return db("users")
+  return db("profiles")
     .where({ id })
     .first();
 }

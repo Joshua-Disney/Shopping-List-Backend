@@ -2,41 +2,41 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 
 const tokenService = require("./tokenService.js");
-const Users = require("../users/usersModel.js");
+const Profiles = require("../profiles/profilesModel.js");
 
 router.post("/register", (req, res) => {
-  let user = req.body;
-  const hash = bcrypt.hashSync(user.password, 10);
-  user.password = hash;
+  let profile = req.body;
+  const hash = bcrypt.hashSync(profile.password, 10);
+  profile.password = hash;
 
-  Users.add(user)
+  Profiles.add(profile)
     .then(saved => {
       res
         .status(201)
-        .json({ message: "User successfully registered to database." });
+        .json({ message: "Profile successfully registered to database." });
     })
     .catch(error => {
       res
         .status(500)
-        .json({ error, message: "User not registered.  Please try again" });
+        .json({ error, message: "Profile not registered.  Please try again" });
     });
 });
 
 router.post("/login", (req, res) => {
-  let { username, password } = req.body;
+  let { email, password } = req.body;
 
-  Users.findBy({ username })
+  Profiles.findBy({ email })
     .first()
-    .then(user => {
-      if (user && bcrypt.compareSync(password, user.password)) {
-        const token = tokenService.generateToken(user);
+    .then(profile => {
+      if (profile && bcrypt.compareSync(password, profile.password)) {
+        const token = tokenService.generateToken(profile);
         res
           .status(200)
-          .json({ message: "User successfully logged in.", token, user });
+          .json({ message: "Profile successfully logged in.", token, profile });
       } else {
         res
           .status(401)
-          .json({ message: "User didn't log in.  Please try again." });
+          .json({ message: "Profile didn't log in.  Please try again." });
       }
     })
     .catch(error => {
