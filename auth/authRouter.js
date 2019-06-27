@@ -2,44 +2,47 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 
 const tokenService = require("./tokenService.js");
-const Profiles = require("../profiles/profilesModel.js");
+const Accounts = require("../accounts/accountsModel.js");
 
 router.post("/register", (req, res) => {
-  let profile = req.body;
-  const hash = bcrypt.hashSync(profile.password, 10);
-  profile.password = hash;
+  let account = req.body;
+  const hash = bcrypt.hashSync(account.password, 10);
+  account.password = hash;
 
-  Profiles.add(profile)
+  Accounts.add(account)
     .then(saved => {
       res
         .status(201)
-        .json({ message: "Profile successfully registered to database." });
+        .json({ message: "Account successfully registered to database." });
     })
     .catch(error => {
+      console.log("Register error : ", error);
       res
         .status(500)
-        .json({ error, message: "Profile not registered.  Please try again" });
+        .json({ error, message: "Account not registered.  Please try again" });
     });
 });
 
 router.post("/login", (req, res) => {
   let { email, password } = req.body;
 
-  Profiles.findBy({ email })
+  Accounts.findBy({ email })
     .first()
-    .then(profile => {
-      if (profile && bcrypt.compareSync(password, profile.password)) {
-        const token = tokenService.generateToken(profile);
+    .then(account => {
+      if (account && bcrypt.compareSync(password, account.password)) {
+        const token = tokenService.generateToken(account);
         res
           .status(200)
-          .json({ message: "Profile successfully logged in.", token, profile });
+          .json({ message: "Account successfully logged in.", token });
       } else {
+        console.log("Password error : ", error);
         res
           .status(401)
-          .json({ message: "Profile didn't log in.  Please try again." });
+          .json({ message: "Incorrect password.  Please try again." });
       }
     })
     .catch(error => {
+      console.log("Login error : ", error);
       res.status(500).json(error);
     });
 });
