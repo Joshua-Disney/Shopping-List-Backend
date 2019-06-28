@@ -9,7 +9,13 @@ router.post("/register", (req, res) => {
   const hash = bcrypt.hashSync(account.password, 10);
   account.password = hash;
 
-  Accounts.add(account)
+  if (!account.email || !account.password) {
+    return res.status(400).json({
+      message: "Please provide both email and password for the account."
+    });
+  }
+
+  Accounts.insert(account)
     .then(saved => {
       res
         .status(201)
@@ -19,7 +25,10 @@ router.post("/register", (req, res) => {
       console.log("Register error : ", error);
       res
         .status(500)
-        .json({ error, message: "Account not registered.  Please try again" });
+        .json({
+          error,
+          message: "Error registering account.  Please try again."
+        });
     });
 });
 
