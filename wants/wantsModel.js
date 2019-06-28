@@ -10,33 +10,33 @@ module.exports = {
 };
 
 function find() {
-  return db("profiles");
+  return db("wants");
 }
 
 function findBy(filter) {
-  return db("profiles").where(filter);
+  return db("wants").where(filter);
 }
 
 function findById(id) {
-  return db("profiles")
+  return db("wants")
     .where({ id })
     .first();
 }
 
-function insert(profile) {
-  return db("profiles")
-    .insert(profile)
+function insert(want) {
+  return db("wants")
+    .insert(want)
     .then(ids => ({ id: ids[0] }));
 }
 
 function update(id, post) {
-  return db("profiles")
+  return db("wants")
     .where({ id })
     .update(post);
 }
 
 function remove(id) {
-  return db("profiles")
+  return db("wants")
     .where({ id })
     .del();
 }
