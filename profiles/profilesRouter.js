@@ -17,8 +17,10 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const profile = await Profiles.findById(req.params.id);
+    const needs = await Profiles.findProfileNeeds(req.params.id);
+    const wants = await Profiles.findProfileWants(req.params.id);
     if (profile) {
-      res.status(200).json(profile);
+      res.status(200).json({ ...profile, needs, wants });
     } else {
       res
         .status(404)

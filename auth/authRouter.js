@@ -23,12 +23,10 @@ router.post("/register", (req, res) => {
     })
     .catch(error => {
       console.log("Register error : ", error);
-      res
-        .status(500)
-        .json({
-          error,
-          message: "Error registering account.  Please try again."
-        });
+      res.status(500).json({
+        error,
+        message: "Error registering account.  Please try again."
+      });
     });
 });
 
@@ -44,7 +42,7 @@ router.post("/login", (req, res) => {
           .status(200)
           .json({ message: "Account successfully logged in.", token });
       } else {
-        console.log("Password error : ", error);
+        console.log("Incorrect password");
         res
           .status(401)
           .json({ message: "Incorrect password.  Please try again." });

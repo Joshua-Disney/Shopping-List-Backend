@@ -1,8 +1,10 @@
 exports.up = function(knex) {
   return knex.schema.createTable("needs", needs => {
-    needs.increments();
+    needs.increments("id");
 
     needs.string("name", 128).notNullable();
+
+    needs.boolean("is_added").notNullable();
 
     needs
       .integer("profile_id")
