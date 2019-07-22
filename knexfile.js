@@ -1,17 +1,22 @@
 const localPgConnection = {
   host: "localhost",
-  database: "users",
-  user: "Disney",
-  password: "1qa2ws"
+  database: "accounts",
+  user: "postgres",
+  password: "M4ttR4yS4y",
+  port: "5432"
 };
-const prodDbConnection = process.env.DATABASE_URL || localPgConnection;
+
+const dbConnection = process.env.DATABASE_URL || localPgConnection;
+// const dbConnection = process.env.DATABASE_URL;
 
 module.exports = {
   development: {
-    client: "sqlite3",
-    connection: {
-      filename: "./database/db.db3"
-    },
+    // client: "sqlite3",
+    client: "pg",
+    // connection: {
+    //   filename: "./database/db.db3"
+    // },
+    connection: dbConnection,
     useNullAsDefault: true,
     migrations: {
       directory: "./database/migrations"
@@ -21,25 +26,37 @@ module.exports = {
     }
   },
 
-  staging: {
-    client: "postgresql",
-    connection: {
-      database: "my_db",
-      user: "username",
-      password: "password"
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
+  // staging: {
+  //   client: "postgresql",
+  //   connection: {
+  //     database: "my_db",
+  //     user: "username",
+  //     password: "password"
+  //   },
+  //   pool: {
+  //     min: 2,
+  //     max: 10
+  //   },
+  //   migrations: {
+  //     tableName: "knex_migrations"
+  //   }
+  // },
+
+  testing: {
+    client: "pg",
+    connection: dbConnection,
+    useNullAsDefault: true,
     migrations: {
-      tableName: "knex_migrations"
+      directory: "./database/migrations"
+    },
+    seeds: {
+      directory: "./database/seeds"
     }
   },
 
   production: {
     client: "pg",
-    connection: prodDbConnection,
+    connection: dbConnection,
     migrations: {
       directory: "./database/migrations"
     },
