@@ -19,17 +19,16 @@ router.post("/register", (req, res) => {
   Accounts.insert(account)
     .then(async saved => {
       try {
-        await Profiles.insert({ name: "Home", account_id: saved.id });
+        console.log("saved: ", saved);
+        await Profiles.insert({ name: "Home", account_id: saved[0] });
         res
           .status(201)
           .json({ message: "Account successfully registered to database." });
       } catch (error) {
         console.log(error);
-        res
-          .status(500)
-          .json({
-            message: "Error registering account.  Please try again later."
-          });
+        res.status(500).json({
+          message: "Error creating home profile.  Please try again later."
+        });
       }
     })
     .catch(error => {
@@ -51,7 +50,11 @@ router.post("/login", (req, res) => {
         const token = tokenService.generateToken(account);
         res
           .status(200)
-          .json({ message: "Account successfully logged in.", token });
+          .json({
+            message: "Account successfully logged in.",
+            token,
+            account_id: account.id
+          });
       } else {
         console.log("Incorrect password");
         res
