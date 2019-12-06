@@ -3,7 +3,7 @@ require("dotenv").config();
 const server = require("./api/server.js");
 
 server.get("/", (req, res) => {
-  res.send("Code me, Papi!");
+  res.send("Code me!");
 });
 
 const port = process.env.PORT || 4000;

@@ -17,3 +17,15 @@ exports.up = function(knex) {
 exports.down = function(knex, Promise) {
   return knex.schema.dropTableIfExists("profiles");
 };
+
+// {
+//  id: 23,
+//  name: "Disney",
+//  account_id: 3
+// }
+
+function findById(id) {
+  return db("accounts")
+    .where({ id })
+    .first();
+}
