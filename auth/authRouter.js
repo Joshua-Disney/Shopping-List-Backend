@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 
 const tokenService = require("./tokenService.js");
 const Accounts = require("../accounts/accountsModel.js");
+const Profiles = require("../profiles/profilesModel.js");
 
 router.post("/register", (req, res) => {
   let account = req.body;
@@ -16,16 +17,25 @@ router.post("/register", (req, res) => {
   }
 
   Accounts.insert(account)
-    .then(saved => {
-      res
-        .status(201)
-        .json({ message: "Account successfully registered to database." });
+    .then(async saved => {
+      try {
+        console.log("saved: ", saved);
+        await Profiles.insert({ name: "Home", account_id: saved[0] });
+        res
+          .status(201)
+          .json({ message: "Account successfully registered to database." });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({
+          message: "Error creating home profile.  Please try again later."
+        });
+      }
     })
     .catch(error => {
       console.log("Register error : ", error);
       res.status(500).json({
         error,
-        message: "Error registering account.  Please try again."
+        message: "Error registering account.  Please try again later."
       });
     });
 });
@@ -40,17 +50,21 @@ router.post("/login", (req, res) => {
         const token = tokenService.generateToken(account);
         res
           .status(200)
-          .json({ message: "Account successfully logged in.", token });
+          .json({
+            message: "Account successfully logged in.",
+            token,
+            account_id: account.id
+          });
       } else {
         console.log("Incorrect password");
         res
           .status(401)
-          .json({ message: "Incorrect password.  Please try again." });
+          .json({ message: "Incorrect password.  Please try again later." });
       }
     })
     .catch(error => {
       console.log("Login error : ", error);
-      res.status(500).json(error);
+      res.status(500).json({ message: error.message });
     });
 });
 

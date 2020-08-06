@@ -55,7 +55,7 @@ function findProfileWants(id) {
 function insert(account) {
   return db("accounts")
     .insert(account)
-    .then(ids => ({ id: ids[0] }));
+    .returning("id");
 }
 
 function update(id, post) {

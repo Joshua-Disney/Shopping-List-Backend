@@ -1,6 +1,6 @@
 const localPgConnection = {
   host: "localhost",
-  database: "accounts",
+  database: "sl",
   user: "postgres",
   password: "M4ttR4yS4y",
   port: "5432"
