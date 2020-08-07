@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const bcrypt = require("bcryptjs");
 
 const Accounts = require("./accountsModel.js");
 const restricted = require("../auth/restrictedMiddleware.js");
@@ -43,6 +44,8 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const account = req.body;
+  const hash = bcrypt.hashSync(account.password, 10);
+  account.password = hash;
   try {
     const updatedAccount = await Accounts.update(req.params.id, account);
     if (account) {
@@ -63,11 +66,11 @@ router.delete("/:id", async (req, res) => {
     const count = await Accounts.remove(req.params.id);
     if (count > 0) {
       res.status(200).json({
-        message: "The account has been removed"
+        message: "The account has been removed",
       });
     } else {
       res.status(404).json({
-        message: "The account with the specified ID does not exist."
+        message: "The account with the specified ID does not exist.",
       });
     }
   } catch (error) {
