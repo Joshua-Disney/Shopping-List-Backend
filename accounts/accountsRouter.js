@@ -44,8 +44,10 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const account = req.body;
-  const hash = bcrypt.hashSync(account.password, 10);
-  account.password = hash;
+  if (account.password) {
+    const hash = bcrypt.hashSync(account.password, 10);
+    account.password = hash;
+  }
   try {
     const updatedAccount = await Accounts.update(req.params.id, account);
     if (account) {
