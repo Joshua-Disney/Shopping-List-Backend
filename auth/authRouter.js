@@ -12,12 +12,12 @@ router.post("/register", (req, res) => {
 
   if (!account.email || !account.password) {
     return res.status(400).json({
-      message: "Please provide both email and password for the account."
+      message: "Please provide both email and password for the account.",
     });
   }
 
   Accounts.insert(account)
-    .then(async saved => {
+    .then(async (saved) => {
       try {
         console.log("saved: ", saved);
         await Profiles.insert({ name: "Home", account_id: saved[0] });
@@ -27,15 +27,15 @@ router.post("/register", (req, res) => {
       } catch (error) {
         console.log(error);
         res.status(500).json({
-          message: "Error creating home profile.  Please try again later."
+          message: "Error creating home profile.  Please try again later.",
         });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("Register error : ", error);
       res.status(500).json({
         error,
-        message: "Error registering account.  Please try again later."
+        message: "Error registering account.  Please try again later.",
       });
     });
 });
@@ -45,24 +45,22 @@ router.post("/login", (req, res) => {
 
   Accounts.findBy({ email })
     .first()
-    .then(account => {
+    .then((account) => {
       if (account && bcrypt.compareSync(password, account.password)) {
         const token = tokenService.generateToken(account);
-        res
-          .status(200)
-          .json({
-            message: "Account successfully logged in.",
-            token,
-            account_id: account.id
-          });
+        res.status(200).json({
+          message: "Account successfully logged in.",
+          token,
+          account_id: account.id,
+        });
       } else {
         console.log("Incorrect password");
         res
           .status(401)
-          .json({ message: "Incorrect password.  Please try again later." });
+          .json({ message: "Incorrect password.  Please try again." });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("Login error : ", error);
       res.status(500).json({ message: error.message });
     });

@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 
 const Accounts = require("./accountsModel.js");
 const restricted = require("../auth/restrictedMiddleware.js");
+const { first } = require("../database/dbConfig.js");
 
 router.get("/", restricted, async (req, res) => {
   // router.get("/", (req, res) => {
@@ -63,22 +64,41 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
-  try {
-    const count = await Accounts.remove(req.params.id);
-    if (count > 0) {
-      res.status(200).json({
-        message: "The account has been removed",
-      });
+router.delete("/:id", (req, res) => {
+  let { password } = req.body;
+
+  Accounts.findById(req.params.id).then(async (account) => {
+    // const account = await Accounts.findBy({ email })
+    //   .first()
+    // .then(async (account) => {
+    console.log("account: ", account);
+    const thing = bcrypt.compareSync(password, account.password);
+    console.log("thing: ", thing);
+    if (account && thing) {
+      try {
+        const count = await Accounts.remove(req.params.id);
+        if (count > 0) {
+          res.status(200).json({
+            message: "The account has been removed",
+          });
+        } else {
+          res.status(404).json({
+            message: "The account with the specified ID does not exist.",
+          });
+        }
+      } catch (error) {
+        console.log("Delete account error: ", error);
+        res
+          .status(500)
+          .json({ message: "Error deleting that account.", error });
+      }
     } else {
-      res.status(404).json({
-        message: "The account with the specified ID does not exist.",
-      });
+      console.log("Incorrect password");
+      res
+        .status(401)
+        .json({ message: "Incorrect password.  Please try again." });
     }
-  } catch (error) {
-    console.log("Delete account error : ", error);
-    res.status(500).json({ message: "Error deleting that account.", error });
-  }
+  });
 });
 
 module.exports = router;
