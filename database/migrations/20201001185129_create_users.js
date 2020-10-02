@@ -14,6 +14,8 @@ exports.up = async function (knex) {
       .inTable("accounts")
       .onDelete("CASCADE")
       .onUpdate("CASCADE");
+
+    users.timestamps();
   });
 };
 
