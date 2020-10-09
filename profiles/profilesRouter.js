@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
 const Profiles = require("./profilesModel.js");
-const restricted = require("../auth/restrictedMiddleware.js");
+// const restricted = require("../auth/restrictedMiddleware.js");
 
 // router.get("/", restricted, async (req, res) => {
 router.get("/", async (req, res) => {
@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
     res.status(200).json(profiles);
   } catch (error) {
     console.log("Get profiles error : ", error);
-    res.status(500).json({ message: "Error getting profiles.", error });
+    res.status(500).json({ message: "Error getting profiles. ", error });
   }
 });
 
@@ -64,11 +64,11 @@ router.delete("/:id", async (req, res) => {
     const count = await Profiles.remove(req.params.id);
     if (count > 0) {
       res.status(200).json({
-        message: "The profile has been removed"
+        message: "The profile has been removed",
       });
     } else {
       res.status(404).json({
-        message: "The profile with the specified ID does not exist."
+        message: "The profile with the specified ID does not exist.",
       });
     }
   } catch (error) {

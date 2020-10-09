@@ -52,6 +52,7 @@ router.post("/login", (req, res) => {
 
   Users.findOne({ email })
     .then((user) => {
+      console.log("user: ", user);
       if (user && bcrypt.compareSync(password, user.password)) {
         const token = tokenService.generateToken(user);
         res.status(200).json({
@@ -61,6 +62,7 @@ router.post("/login", (req, res) => {
         });
       } else {
         console.log("Incorrect password");
+        console.log("email, password: ", email, password);
         res
           .status(401)
           .json({ message: "Incorrect password.  Please try again later." });
