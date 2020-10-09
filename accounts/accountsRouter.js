@@ -16,9 +16,11 @@ router.get("/", restricted, async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
+  const id = req.params.id;
   try {
-    const account = await Accounts.findById(req.params.id);
-    let profiles = await Accounts.findAccountProfiles(req.params.id);
+    const account = await Accounts.findById(id);
+    let users = await Accounts.findAccountUsers(id);
+    let profiles = await Accounts.findAccountProfiles(id);
     // profiles = profiles.map(async profile => {
     //   profile.needs = await Accounts.findProfileNeeds(profile.id);
     //   profile.wants = await Accounts.findProfileWants(profile.id);
@@ -30,7 +32,7 @@ router.get("/:id", async (req, res) => {
       profile.wants = await Accounts.findProfileWants(profile.id);
     }
     if (account) {
-      res.status(200).json({ ...account, profiles });
+      res.status(200).json({ ...account, users, profiles });
     } else {
       res
         .status(404)
