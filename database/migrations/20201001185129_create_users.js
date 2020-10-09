@@ -15,7 +15,7 @@ exports.up = async function (knex) {
       .onDelete("CASCADE")
       .onUpdate("CASCADE");
 
-    users.timestamps();
+    users.timestamps(true, true);
   });
 };
 
