@@ -4,12 +4,13 @@ module.exports = {
   find,
   findBy,
   findById,
+  findAccountUsers,
   findAccountProfiles,
   findProfileNeeds,
   findProfileWants,
   insert,
   update,
-  remove
+  remove,
 };
 
 function find() {
@@ -21,10 +22,11 @@ function findBy(filter) {
 }
 
 function findById(id) {
-  return db("accounts")
-    .select("accounts.id")
-    .where({ id })
-    .first();
+  return db("accounts").select("accounts.id").where({ id }).first();
+}
+
+function findAccountUsers(id) {
+  return db("users as u").where("u.account_id", id);
 }
 
 function findAccountProfiles(id) {
@@ -52,20 +54,14 @@ function findProfileWants(id) {
   );
 }
 
-function insert(account) {
-  return db("accounts")
-    .insert(account)
-    .returning("id");
+function insert() {
+  return db("accounts").insert({}).returning("id");
 }
 
 function update(id, post) {
-  return db("accounts")
-    .where({ id })
-    .update(post);
+  return db("accounts").where({ id }).update(post);
 }
 
 function remove(id) {
-  return db("accounts")
-    .where({ id })
-    .del();
+  return db("accounts").where({ id }).del();
 }

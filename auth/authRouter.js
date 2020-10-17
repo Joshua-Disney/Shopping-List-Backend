@@ -4,38 +4,53 @@ const bcrypt = require("bcryptjs");
 const tokenService = require("./tokenService.js");
 const Accounts = require("../accounts/accountsModel.js");
 const Profiles = require("../profiles/profilesModel.js");
+const Users = require("../users/usersModel.js");
+const usersModel = require("../users/usersModel.js");
 
-router.post("/register", (req, res) => {
-  let account = req.body;
-  const hash = bcrypt.hashSync(account.password, 10);
-  account.password = hash;
+router.post("/register", async (req, res) => {
+  let user = req.body;
+  const hash = bcrypt.hashSync(user.password, 10);
+  user.password = hash;
 
-  if (!account.email || !account.password) {
+  if (!user.email || !user.password) {
     return res.status(400).json({
-      message: "Please provide both email and password for the account."
+      message: "Please provide both email and password for the account.",
     });
   }
 
-  Accounts.insert(account)
-    .then(async saved => {
+  // Creates an id from nothing because we are not limited by the law of equivalent exchange.  #GitGudScrub
+  let id;
+  try {
+    [id] = await Accounts.insert();
+    console.log("register id: ", id);
+  } catch (error) {
+    console.log(error);
+  }
+
+  Users.insert({
+    ...user,
+    account_id: id,
+  })
+    .then(async (saved) => {
       try {
         console.log("saved: ", saved);
-        await Profiles.insert({ name: "Home", account_id: saved[0] });
+        // id come from the Accounts.insert function
+        await Profiles.insert({ name: "Home", account_id: id });
         res
           .status(201)
           .json({ message: "Account successfully registered to database." });
       } catch (error) {
         console.log(error);
         res.status(500).json({
-          message: "Error creating home profile.  Please try again later."
+          message: "Error creating home profile.  Please try again later.",
         });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("Register error : ", error);
       res.status(500).json({
         error,
-        message: "Error registering account.  Please try again later."
+        message: "Error registering account.  Please try again later.",
       });
     });
 });
@@ -43,26 +58,25 @@ router.post("/register", (req, res) => {
 router.post("/login", (req, res) => {
   let { email, password } = req.body;
 
-  Accounts.findBy({ email })
-    .first()
-    .then(account => {
-      if (account && bcrypt.compareSync(password, account.password)) {
-        const token = tokenService.generateToken(account);
-        res
-          .status(200)
-          .json({
-            message: "Account successfully logged in.",
-            token,
-            account_id: account.id
-          });
+  Users.findOne({ email })
+    .then((user) => {
+      console.log("user: ", user);
+      if (user && bcrypt.compareSync(password, user.password)) {
+        const token = tokenService.generateToken(user);
+        res.status(200).json({
+          message: "Account successfully logged in.",
+          token,
+          account_id: user.account_id,
+        });
       } else {
         console.log("Incorrect password");
+        console.log("email, password: ", email, password);
         res
           .status(401)
           .json({ message: "Incorrect password.  Please try again later." });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("Login error : ", error);
       res.status(500).json({ message: error.message });
     });
