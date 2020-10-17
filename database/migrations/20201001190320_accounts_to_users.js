@@ -20,7 +20,7 @@ exports.down = async function (knex) {
   .where(
     "created_at",
     "<=",
-    "2020-10-09T00:00:00.000Z"
+    "2020-10-18T00:00:00.000Z"
   );
 
   const updates = previousUsers.map((user) => {
