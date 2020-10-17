@@ -19,7 +19,13 @@ router.post("/register", async (req, res) => {
   }
 
   // Creates an id from nothing because we are not limited by the law of equivalent exchange.  #GitGudScrub
-  const [id] = await Accounts.insert();
+  let id;
+  try {
+    [id] = await Accounts.insert();
+    console.log("register id: ", id);
+  } catch (error) {
+    console.log(error);
+  }
 
   Users.insert({
     ...user,

@@ -17,11 +17,6 @@ exports.up = async function (knex) {
 exports.down = async function (knex) {
   // fetch previous users
   const previousUsers = await db("users")
-  .where(
-    "created_at",
-    "<=",
-    "2020-10-18T00:00:00.000Z"
-  );
 
   const updates = previousUsers.map((user) => {
     return db("accounts")
@@ -30,6 +25,10 @@ exports.down = async function (knex) {
   });
 
   await Promise.all(updates);
+
+  //Kill all accounts with no email or password
+  await db("accounts").where("email", null).del()
+  
 
   return knex.schema.alterTable("accounts", (accounts) => {
     accounts.string("email", 128).notNullable().unique().alter();

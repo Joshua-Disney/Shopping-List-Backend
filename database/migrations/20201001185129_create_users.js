@@ -9,6 +9,7 @@ exports.up = async function (knex) {
 
     users
       .integer("account_id")
+      .notNullable()
       .unsigned()
       .references("id")
       .inTable("accounts")
