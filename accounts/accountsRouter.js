@@ -4,8 +4,8 @@ const bcrypt = require("bcryptjs");
 const Accounts = require("./accountsModel.js");
 const restricted = require("../auth/restrictedMiddleware.js");
 
-router.get("/", restricted, async (req, res) => {
-  // router.get("/", (req, res) => {
+// router.get("/", restricted, async (req, res) => {
+  router.get("/", async (req, res) => {
   try {
     const accounts = await Accounts.find();
     res.status(200).json(accounts);
