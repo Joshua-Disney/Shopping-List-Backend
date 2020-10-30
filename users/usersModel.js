@@ -5,6 +5,7 @@ module.exports = {
   findBy,
   findOne,
   insert,
+  remove,
 };
 
 function find() {
@@ -23,4 +24,8 @@ function insert(user) {
   return db("users")
     .insert(user)
     .then((ids) => ({ id: ids[0] }));
+}
+
+function remove(id) {
+  return db("users").where({ id }).del();
 }
