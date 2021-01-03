@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
-const restrictedMiddleware = require("../auth/restrictedMiddleware");
 
 // const Users = require("./usersModel.js");
 // const restricted = require("../auth/restrictedMiddleware.js");
@@ -53,6 +52,27 @@ router.put("/:id", async (req, res) => {
   } catch (error) {
     console.log("Update user error: ", error);
     res.status(500).json({ message: "Error updating that user.", error });
+  }
+});
+
+router.post("/", async (req, res) => {
+  // router.post("/", restricted, async (req, res) => {
+  const user = req.body;
+  const hash = bcrypt.hashSync(user.password, 10);
+  user.password = hash;
+
+  if (!user.email || !user.password) {
+    return res.status(400).json({
+      message: "Please provide both email and password for the user.",
+    });
+  }
+
+  try {
+    await Users.insert(user);
+    res.status(201).json({ message: "User successfully created." });
+  } catch (error) {
+    console.log("Create user error: ", error);
+    res.status(500).json({ message: "Error creating that user.", error });
   }
 });
 
