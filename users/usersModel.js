@@ -4,7 +4,10 @@ module.exports = {
   find,
   findBy,
   findOne,
+  findById,
   insert,
+  update,
+  remove,
 };
 
 function find() {
@@ -19,8 +22,20 @@ function findOne(filter) {
   return db("users").where(filter).first();
 }
 
+function findById(id) {
+  return db("users").select("users.id").where({ id }).first();
+}
+
 function insert(user) {
   return db("users")
     .insert(user)
     .then((ids) => ({ id: ids[0] }));
+}
+
+function update(id, user) {
+  return db("users").where({ id }).update(user);
+}
+
+function remove(id) {
+  return db("users").where({ id }).del();
 }
