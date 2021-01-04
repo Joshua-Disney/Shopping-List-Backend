@@ -23,7 +23,7 @@ function findOne(filter) {
 }
 
 function findById(id) {
-  return db("users").select("users.id").where({ id }).first();
+  return db("users").where({ id }).first();
 }
 
 function insert(user) {
