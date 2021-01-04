@@ -15,8 +15,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
-  // router.get("/:id", restricted, async (req, res) => {
+router.get("/:id", restricted, async (req, res) => {
+  // router.get("/:id", async (req, res) => {
   try {
     const user = await Users.findById(req.params.id);
     if (user) {
