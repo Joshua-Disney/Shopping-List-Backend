@@ -55,8 +55,8 @@ router.put("/:id", restricted, async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  // router.post("/", restricted, async (req, res) => {
+router.post("/", restricted, async (req, res) => {
+  // router.post("/", async (req, res) => {
   const user = req.body;
   const hash = bcrypt.hashSync(user.password, 10);
   user.password = hash;
