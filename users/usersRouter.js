@@ -32,8 +32,8 @@ router.get("/:id", restricted, async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
-  // router.put("/:id", restricted, async (req, res) => {
+router.put("/:id", restricted, async (req, res) => {
+  // router.put("/:id", async (req, res) => {
   const user = req.body;
   if (user.password) {
     const hash = bcrypt.hashSync(user.password, 10);
