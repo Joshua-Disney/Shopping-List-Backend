@@ -76,8 +76,8 @@ router.post("/", restricted, async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
-  // router.delete("/:id", restricted, async (req, res) => {
+router.delete("/:id", restricted, async (req, res) => {
+  // router.delete("/:id", async (req, res) => {
   try {
     const count = await Users.remove(req.params.id);
     if (count > 0) {
