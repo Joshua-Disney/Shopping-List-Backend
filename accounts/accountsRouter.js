@@ -15,9 +15,8 @@ router.get("/", restricted, async (req, res) => {
   }
 });
 
-
 router.get("/:id", restricted, async (req, res) => {
-// router.get("/:id", async (req, res) => {
+  // router.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const account = await Accounts.findById(id);
@@ -46,9 +45,8 @@ router.get("/:id", restricted, async (req, res) => {
   }
 });
 
-
 router.put("/:id", restricted, async (req, res) => {
-// router.put("/:id", async (req, res) => {
+  // router.put("/:id", async (req, res) => {
   const account = req.body;
   if (account.password) {
     const hash = bcrypt.hashSync(account.password, 10);
@@ -56,7 +54,7 @@ router.put("/:id", restricted, async (req, res) => {
   }
   try {
     const updatedAccount = await Accounts.update(req.params.id, account);
-    if (account) {
+    if (updatedAccount) {
       res.status(200).json({ message: "Account successfullly updated." });
     } else {
       res
@@ -70,7 +68,7 @@ router.put("/:id", restricted, async (req, res) => {
 });
 
 router.delete("/:id", restricted, async (req, res) => {
-// router.delete("/:id", async (req, res) => {
+  // router.delete("/:id", async (req, res) => {
   try {
     const count = await Accounts.remove(req.params.id);
     if (count > 0) {
