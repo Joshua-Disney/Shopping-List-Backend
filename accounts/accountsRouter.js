@@ -2,10 +2,8 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 
 const Accounts = require("./accountsModel.js");
-const restricted = require("../auth/restrictedMiddleware.js");
 
-router.get("/", restricted, async (req, res) => {
-  // router.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const accounts = await Accounts.find();
     res.status(200).json(accounts);
@@ -15,8 +13,7 @@ router.get("/", restricted, async (req, res) => {
   }
 });
 
-router.get("/:id", restricted, async (req, res) => {
-  // router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const account = await Accounts.findById(id);
@@ -45,8 +42,7 @@ router.get("/:id", restricted, async (req, res) => {
   }
 });
 
-router.put("/:id", restricted, async (req, res) => {
-  // router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const account = req.body;
   if (account.password) {
     const hash = bcrypt.hashSync(account.password, 10);
@@ -67,8 +63,7 @@ router.put("/:id", restricted, async (req, res) => {
   }
 });
 
-router.delete("/:id", restricted, async (req, res) => {
-  // router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const count = await Accounts.remove(req.params.id);
     if (count > 0) {
