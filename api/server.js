@@ -1,7 +1,7 @@
 const express = require("express");
 
 const configureMiddleware = require("./middleware.js");
-const restricted = reqire("../auth/restrictedMiddleware.js");
+const restricted = require("../auth/restrictedMiddleware.js");
 
 const authRouter = require("../auth/authRouter.js");
 const accountsRouter = require("../accounts/accountsRouter.js");
