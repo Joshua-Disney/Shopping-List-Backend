@@ -2,10 +2,8 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 
 const Users = require("./usersModel.js");
-// const restricted = require("../auth/restrictedMiddleware.js");
 
 router.get("/", async (req, res) => {
-  // router.get("/", restricted, async (req, res) => {
   try {
     const users = await Users.find();
     res.status(200).json(users);
@@ -15,8 +13,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", restricted, async (req, res) => {
-  // router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const user = await Users.findById(req.params.id);
     if (user) {
@@ -32,8 +29,7 @@ router.get("/:id", restricted, async (req, res) => {
   }
 });
 
-router.put("/:id", restricted, async (req, res) => {
-  // router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const user = req.body;
   if (user.password) {
     const hash = bcrypt.hashSync(user.password, 10);
@@ -55,8 +51,7 @@ router.put("/:id", restricted, async (req, res) => {
   }
 });
 
-router.post("/", restricted, async (req, res) => {
-  // router.post("/", async (req, res) => {
+router.post("/", async (req, res) => {
   const user = req.body;
   const hash = bcrypt.hashSync(user.password, 10);
   user.password = hash;
@@ -76,8 +71,7 @@ router.post("/", restricted, async (req, res) => {
   }
 });
 
-router.delete("/:id", restricted, async (req, res) => {
-  // router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const count = await Users.remove(req.params.id);
     if (count > 0) {

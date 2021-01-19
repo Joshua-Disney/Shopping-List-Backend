@@ -1,9 +1,7 @@
 const router = require("express").Router();
 
 const Profiles = require("./profilesModel.js");
-// const restricted = require("../auth/restrictedMiddleware.js");
 
-// router.get("/", restricted, async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const profiles = await Profiles.find();

@@ -1,9 +1,7 @@
 const router = require("express").Router();
 
 const Wants = require("./wantsModel.js");
-const restricted = require("../auth/restrictedMiddleware.js");
 
-// router.get("/", restricted, async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const wants = await Wants.find();
@@ -62,11 +60,11 @@ router.delete("/:id", async (req, res) => {
     const count = await Wants.remove(req.params.id);
     if (count > 0) {
       res.status(200).json({
-        message: "The want has been removed"
+        message: "The want has been removed",
       });
     } else {
       res.status(404).json({
-        message: "The want with the specified ID does not exist."
+        message: "The want with the specified ID does not exist.",
       });
     }
   } catch (error) {
