@@ -67,6 +67,7 @@ router.post("/login", (req, res) => {
           message: "Account successfully logged in.",
           token,
           account_id: user.account_id,
+          user_id: user.id,
         });
       } else {
         console.log("Incorrect password");
