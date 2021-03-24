@@ -3,10 +3,11 @@ const localPgConnection = {
   database: "sl",
   user: "postgres",
   password: "M4ttR4yS4y",
-  port: "5432"
+  port: "5432",
 };
 
-const dbConnection = process.env.DATABASE_URL || localPgConnection;
+const dbConnection =
+  process.env.DATABASE_URL + "?ssl=true" || localPgConnection;
 // const dbConnection = process.env.DATABASE_URL;
 
 module.exports = {
@@ -19,11 +20,11 @@ module.exports = {
     connection: dbConnection,
     useNullAsDefault: true,
     migrations: {
-      directory: "./database/migrations"
+      directory: "./database/migrations",
     },
     seeds: {
-      directory: "./database/seeds"
-    }
+      directory: "./database/seeds",
+    },
   },
 
   // staging: {
@@ -47,21 +48,21 @@ module.exports = {
     connection: dbConnection,
     useNullAsDefault: true,
     migrations: {
-      directory: "./database/migrations"
+      directory: "./database/migrations",
     },
     seeds: {
-      directory: "./database/seeds"
-    }
+      directory: "./database/seeds",
+    },
   },
 
   production: {
     client: "pg",
     connection: dbConnection,
     migrations: {
-      directory: "./database/migrations"
+      directory: "./database/migrations",
     },
     seeds: {
-      directory: "./database/seeds"
-    }
-  }
+      directory: "./database/seeds",
+    },
+  },
 };
