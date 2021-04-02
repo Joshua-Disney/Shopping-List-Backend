@@ -6,7 +6,8 @@ const localPgConnection = {
   port: "5432",
 };
 
-const dbConnection = process.env.DATABASE_URL || localPgConnection;
+const dbConnection =
+  process.env.DATABASE_URL + "?ssl=true" || localPgConnection;
 // const dbConnection = process.env.DATABASE_URL;
 
 module.exports = {
